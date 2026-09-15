@@ -1,0 +1,23 @@
+[package]
+name = "cerberus-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+cerberus-core = { path = "../core" }
+
+[[bin]]
+name = "header"
+path = "fuzz_targets/header.rs"
+test = false
+doc = false
+bench = false
+
+# The fuzz crate is not part of the workspace: it needs a nightly toolchain and
+# the sanitizer runtime, which must not be forced on normal `cargo build`.
+[workspace]

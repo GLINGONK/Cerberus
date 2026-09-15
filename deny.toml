@@ -1,0 +1,71 @@
+# cargo-deny configuration.
+#
+# A password vault's dependency tree is part of its attack surface: every crate
+# here runs with full access to decrypted secrets. These rules make an
+# unreviewed addition fail the build rather than slip in unnoticed.
+
+[advisories]
+db-urls = ["https://github.com/rustsec/advisory-db"]
+yanked = "deny"
+
+# Every entry below must name a crate, say why it cannot affect this build, and
+# be re-checked when Tauri is upgraded. Nothing is ignored merely to silence it.
+#
+# All of these are GTK3 / Linux desktop bindings that Tauri declares
+# unconditionally but only compiles on Linux. Cerberus ships Windows-only
+# (WebView2), so this code is never built, linked or executed here. They are
+# "unmaintained" advisories, not vulnerabilities.
+ignore = [
+    "RUSTSEC-2024-0411", # gtk
+    "RUSTSEC-2024-0412", # atk
+    "RUSTSEC-2024-0413", # gdk
+    "RUSTSEC-2024-0414", # gdkwayland
+    "RUSTSEC-2024-0415", # gdkx11
+    "RUSTSEC-2024-0416", # atk-sys
+    "RUSTSEC-2024-0417", # gdk-sys
+    "RUSTSEC-2024-0418", # gdkwayland-sys
+    "RUSTSEC-2024-0419", # gdkx11-sys
+    "RUSTSEC-2024-0420", # gtk-sys
+    "RUSTSEC-2024-0370", # proc-macro-error, build-time only, never linked
+    "RUSTSEC-2025-0075", # glib unsoundness in an iterator Cerberus never reaches
+    "RUSTSEC-2025-0080", # idem, GTK stack
+    "RUSTSEC-2025-0081", # idem, GTK stack
+    "RUSTSEC-2025-0098", # unic-ucd-version, unmaintained, build-time Unicode tables
+    "RUSTSEC-2025-0100", # unic-ucd-ident, idem
+]
+
+[bans]
+# Tauri's own tree pulls several crates at two versions. That is noise, not a
+# security signal, so it stays a warning rather than failing the build.
+multiple-versions = "warn"
+wildcards = "deny"
+# Crates that must never appear anywhere in the tree.
+deny = [
+    # Unmaintained and historically unsound.
+    { name = "openssl", reason = "the RustCrypto stack is used instead; no C TLS stack is needed" },
+    { name = "time", version = "<0.2.23", reason = "RUSTSEC-2020-0071 segfault" },
+]
+
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "Unicode-DFS-2016",
+    "Zlib",
+    "CC0-1.0",
+    "MPL-2.0",
+    "BSL-1.0",
+    "OpenSSL",
+    "PolyForm-Noncommercial-1.0.0",
+]
+confidence-threshold = 0.9
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

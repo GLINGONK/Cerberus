@@ -1,0 +1,32 @@
+# Build output
+/target
+**/target
+*.pdb
+
+# Vaults, backups, exports — never commit user data
+*.cbv
+*.cbv.*.bak
+*.cbv.*.rollback
+*.cbvlock
+*.dat
+cerberus-export*.csv
+Database.csv
+
+# Local build / audit logs
+*.log
+
+# Internal working documents (reference a developer's real machine paths and
+# are instructions to reviewing tools, not user-facing docs). Kept out of the
+# public tree on purpose. The public audit summary is docs/SECURITY-AUDIT.md.
+docs/AUDIT-BRIEF-*.md
+docs/AUDIT-COMPTE-RENDU-*.md
+
+# OS / editor cruft
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Local Claude Code dev config
+.claude/
