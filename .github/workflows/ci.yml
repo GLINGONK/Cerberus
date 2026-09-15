@@ -53,9 +53,9 @@ jobs:
     name: Dependency audit
     runs-on: ubuntu-latest
     permissions:
+      checks: write
       contents: read
-      # rustsec/audit-check uses the token to report vulnerable dependencies.
-      issues: write
+      # rustsec/audit-check publishes its result as a GitHub check run.
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
