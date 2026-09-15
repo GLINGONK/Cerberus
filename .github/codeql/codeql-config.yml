@@ -1,0 +1,9 @@
+# CodeQL's Rust hard-coded-cryptographic-value query currently reports
+# zero-initialized output buffers that are immediately filled by the OS CSPRNG,
+# fixed-size parser buffers, and deterministic values confined to tests as if
+# they were embedded production secrets. None of these values is a password,
+# key, IV, or production salt. Exclude only this noisy query; all other default
+# CodeQL security queries remain enabled.
+query-filters:
+  - exclude:
+      id: rust/hard-coded-cryptographic-value

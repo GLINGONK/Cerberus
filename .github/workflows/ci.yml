@@ -9,6 +9,11 @@ env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
 
+# Default every job to the minimum permission required to check out and build
+# the repository. Individual jobs can add narrowly scoped permissions below.
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Tests (${{ matrix.os }})
@@ -47,6 +52,10 @@ jobs:
   supply-chain:
     name: Dependency audit
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # rustsec/audit-check uses the token to report vulnerable dependencies.
+      issues: write
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
